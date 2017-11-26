@@ -42,6 +42,7 @@ class UserController extends Controller
     /**
      * Edit user by id
      * @return \Illuminate\Http\JsonResßponse
+     * @param \Illuminate\Http\Request $request
      */
     public function edit($id, Request $request){
         $user = $this->service->edit($id, $request);
@@ -50,6 +51,7 @@ class UserController extends Controller
 
     /**
      * Add user
+     * @param \Illuminate\Http\Request $request
      */
     public function add(Request $request){
         $user = $this->service->add($request);
