@@ -45,10 +45,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         "id" => "uuid",
     ];
 
+
     /**
-     * transform Uuid
-     * @param Uuid $user
-     * @return Uuid
+     * @{inheritDoc}
      */
     public function transform() {
         $transformed = $this->toArray();
@@ -57,6 +56,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             $transformed[$uuidAttributeName] = Uuid::import($value)->string;
         }
         return $transformed;
+    }
+
+
+    /**
+     * @{inheritDoc}
+     */
+    public function entityType() {
+        return "users";
     }
 
 }

@@ -14,7 +14,7 @@ class JsonApiPresenter {
         $transformed = $transformer->transform();
         $data = [
             'id' => $transformed['id'],
-            'type' => $transformer->getTable(),
+            'type' => $transformer->entityType(),
         ];
         unset($transformed['id']);
         $data['attributes'] = $transformed;
@@ -50,7 +50,7 @@ class JsonApiPresenter {
      */
     public function renderCollection(Collection $transformer, $statusCode = 200, $headers = []) {
         $transformer = $this->transformCollection($transformer);
-        return response()->json($transformer);
+        return response()->json($transformer, $statusCode, $headers);
     }
 
     /**
@@ -60,7 +60,26 @@ class JsonApiPresenter {
      */
     public function renderPaginator(AbstractPaginator $paginator, $statusCode = 200, $headers = []) {
         $collection = $this->transformCollection($paginator->getCollection());
-        $paginator->setCollection($collection);
-        return response()->json($paginator);
+        $nextUrl = null;
+
+        if ($paginator->hasMorePages()) {
+            $nextUrl = $paginator->url($paginator->currentPage() + 1);
+        }
+
+        $response = [
+            'meta' => [
+                'total' => $paginator->total(),
+                'count' => $paginator->count()
+            ],
+            'data' => $collection,
+            'links' => [
+                'self' => $paginator->url($paginator->currentPage()),
+                'first' =>  $paginator->url(0),
+                'prev' => $paginator->previousPageUrl(),
+                'next' => $nextUrl,
+            ]
+        ];
+
+        return response()->json($response, $statusCode, $headers);
     }
 }
