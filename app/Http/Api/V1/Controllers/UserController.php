@@ -5,7 +5,7 @@ namespace App\Http\Api\V1\Controllers;
 use App\Services\Users\UserService;
 use Laravel\Lumen\Routing\Controller;
 use Illuminate\Http\Request;
-use App\Services\Users\UserPresenter;
+use App\Presenters\JsonApiPresenter;
 
 class UserController extends Controller
 {
@@ -18,7 +18,7 @@ class UserController extends Controller
      */
     public function __construct(UserService $service) {
         $this->service = $service;
-        $this->presenter = new UserPresenter;
+        $this->presenter = new JsonApiPresenter;
     }
 
     /**
@@ -46,7 +46,11 @@ class UserController extends Controller
      */
     public function edit($id, Request $request){
         $user = $this->service->edit($id, $request);
-        return $this->presenter->render($user, 200);
+        $headers = [
+            'Content-Type' => 'application/vnd.api+json',
+            'Accept' => 'application/vnd.api+json'
+        ];
+        return $this->presenter->render($user, 200, $headers);
     }
 
     /**
@@ -55,18 +59,22 @@ class UserController extends Controller
      */
     public function add(Request $request){
         $user = $this->service->add($request);
-        return $this->presenter->render($user, 200);
+        $headers = [
+            'Content-Type' => 'application/vnd.api+json',
+            'Accept' => 'application/vnd.api+json'
+        ];
+        return $this->presenter->render($user, 200, $headers);
     }
 
     /**
      * Delete User by id
      */
     public function delete($id){
-
         $deleted = $this->service->delete($id);
+
         return response()->json([
-            "meta" => [
-                "deleted_count" => $deleted,
+            'meta' => [
+                'deleted_count' => $deleted,
             ]
         ], 200);
     }
