@@ -31,3 +31,6 @@ $router->post('/users', [
 $router->delete('/users/{id}', [
     'as' => 'users', 'uses' => 'UserController@delete'
 ]);
+$router->post('/register', [
+    'as' => 'users', 'uses' => 'UserController@register'
+]);

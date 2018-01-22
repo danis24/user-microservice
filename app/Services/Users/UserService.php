@@ -56,4 +56,9 @@ class UserService {
     public function delete($id){
         return $this->newUser()->destroyByUuid($id);
     }
+
+    public function register($payload)
+    {
+         return $this->newUser()->create($payload);
+    }
 }

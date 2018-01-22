@@ -79,4 +79,22 @@ class UserController extends Controller
         ], 200);
     }
 
+    public function register(Request $request)
+    {
+         $data = [
+             'first_name' => $request->first_name,
+             'last_name' => $request->last_name,
+             'email' => $request->email,
+             'password' => app('hash')->make($request->password),
+             'phone' => $request->phone,
+             'country' => $request->country
+         ];
+         $user = $this->service->register($data);
+         $headers = [
+            'Content-Type' => 'application/vnd.api+json',
+            'Accept' => 'application/vnd.api+json'
+         ];
+         return $this->presenter->render($user, 200, $headers);
+    }
+
 }
