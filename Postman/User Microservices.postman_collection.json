@@ -1,0 +1,325 @@
+{
+	"info": {
+		"_postman_id": "432a32ba-90aa-47a9-8531-443ccd102fa8",
+		"name": "User Microservices",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Users",
+			"item": [
+				{
+					"name": "Create",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4877864b-a5e1-4226-8a26-a1ef84e17939",
+								"exec": [
+									"pm.sendRequest('http://faker.hook.io/?property=name.firstName', function (err, res) {",
+									"    if (err) {",
+									"        console.log(err);",
+									"    } else {",
+									"        pm.environment.set(\"data.firstName\", res.json());",
+									"    }",
+									"});",
+									"",
+									"pm.sendRequest('http://faker.hook.io/?property=name.lastName', function (err, res) {",
+									"    if (err) {",
+									"        console.log(err);",
+									"    } else {",
+									"        pm.environment.set(\"data.lastName\", res.json());",
+									"    }",
+									"});",
+									"",
+									"",
+									"pm.sendRequest('http://faker.hook.io/?property=internet.email', function (err, res) {",
+									"    if (err) {",
+									"        console.log(err);",
+									"    } else {",
+									"        pm.environment.set(\"data.email\", res.json());",
+									"    }",
+									"});",
+									"",
+									"pm.sendRequest('http://faker.hook.io/?property=phone.phoneNumber', function (err, res) {",
+									"    if (err) {",
+									"        console.log(err);",
+									"    } else {",
+									"        pm.environment.set(\"data.phone\", res.json());",
+									"    }",
+									"});",
+									"",
+									"pm.sendRequest('http://faker.hook.io/?property=address.country', function (err, res) {",
+									"    if (err) {",
+									"        console.log(err);",
+									"    } else {",
+									"        pm.environment.set(\"data.country\", res.json());",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "0299f7e5-7a00-4665-a4b4-1518e4c38806",
+								"exec": [
+									"var response = pm.response.json();",
+									"",
+									"pm.environment.set(\"USER_ID\", response['data']['id']);",
+									"",
+									"pm.test(\"Status code is 201\", () => pm.response.to.have.status(201));",
+									"",
+									"// @todo assert attributes"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"first_name\": \"{{data.firstName}}\",\n\t\"last_name\": \"{{data.lastName}}\",\n\t\"email\": \"{{data.email}}\",\n\t\"password\": \"secret\",\n\t\"phone\": \"{{data.phone}}\",\n\t\"country\": \"{{data.country}}\"\n}"
+						},
+						"url": {
+							"raw": "{{DOMAIN}}/users",
+							"host": [
+								"{{DOMAIN}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Browse Users",
+			"item": [
+				{
+					"name": "Browse",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "874e36b0-5473-4ab8-9514-5d9cf7d7dc3f",
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+									"",
+									"// @todo assert attributes"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{DOMAIN}}/users",
+							"host": [
+								"{{DOMAIN}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Action Users",
+			"item": [
+				{
+					"name": "Read",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4bd51841-3fac-493e-b486-16f6537cea75",
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+									"",
+									"// @todo assert attributes"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{DOMAIN}}/users/{{USER_ID}}",
+							"host": [
+								"{{DOMAIN}}"
+							],
+							"path": [
+								"users",
+								"{{USER_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "511edd9b-e71f-48c5-a283-bc3cd9bf0236",
+								"exec": [
+									"    pm.test(\"Status code is 201\", () => pm.response.to.have.status(201));",
+									"",
+									"// @todo assert attributes"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "709bac09-3040-4f73-b583-b6a61fe2ccd9",
+								"exec": [
+									"pm.sendRequest('http://faker.hook.io/?property=name.firstName', function (err, res) {",
+									"    if (err) {",
+									"        console.log(err);",
+									"    } else {",
+									"        pm.environment.set(\"data.firstName\", res.json());",
+									"    }",
+									"});",
+									"",
+									"pm.sendRequest('http://faker.hook.io/?property=name.lastName', function (err, res) {",
+									"    if (err) {",
+									"        console.log(err);",
+									"    } else {",
+									"        pm.environment.set(\"data.lastName\", res.json());",
+									"    }",
+									"});",
+									"",
+									"",
+									"pm.sendRequest('http://faker.hook.io/?property=internet.email', function (err, res) {",
+									"    if (err) {",
+									"        console.log(err);",
+									"    } else {",
+									"        pm.environment.set(\"data.email\", res.json());",
+									"    }",
+									"});",
+									"",
+									"pm.sendRequest('http://faker.hook.io/?property=phone.phoneNumber', function (err, res) {",
+									"    if (err) {",
+									"        console.log(err);",
+									"    } else {",
+									"        pm.environment.set(\"data.phone\", res.json());",
+									"    }",
+									"});",
+									"",
+									"pm.sendRequest('http://faker.hook.io/?property=address.country', function (err, res) {",
+									"    if (err) {",
+									"        console.log(err);",
+									"    } else {",
+									"        pm.environment.set(\"data.country\", res.json());",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"first_name\": \"{{data.firstName}}\",\n\t\"last_name\": \"{{data.lastName}}\",\n\t\"email\": \"{{data.email}}\",\n\t\"password\": \"secret\",\n\t\"phone\": \"{{data.phone}}\",\n\t\"country\": \"{{data.country}}\"\n}"
+						},
+						"url": {
+							"raw": "{{DOMAIN}}/users/{{USER_ID}}",
+							"host": [
+								"{{DOMAIN}}"
+							],
+							"path": [
+								"users",
+								"{{USER_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9af570e5-f587-4030-abc3-ebc99947d454",
+								"exec": [
+									"pm.test(\"Status code is 204\", () => pm.response.to.have.status(204));",
+									"",
+									"// @todo assert attributes"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{DOMAIN}}/users/{{USER_ID}}",
+							"host": [
+								"{{DOMAIN}}"
+							],
+							"path": [
+								"users",
+								"{{USER_ID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
