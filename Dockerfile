@@ -1,4 +1,4 @@
-FROM docker-base:latest
+FROM danis24/docker-base:latest
 MAINTAINER Danis Yogaswara <danis@aniqma.com>
 
 # App Install Directory
