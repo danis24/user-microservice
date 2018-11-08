@@ -1,0 +1,61 @@
+server {
+    listen 80 default_server;
+	listen [::]:80 default_server ipv6only=on;
+    server_name  ${NGINX_SERVER_NAME};
+
+    charset utf-8;
+    #access_log  /var/log/nginx/log/host.access.log  main;
+
+    root   /srv/public;
+
+    location / {
+        if (-f $document_root/maintenance) {
+            return 503;
+        }
+
+        # try to serve file directly, fallback to index.php
+        try_files $uri $uri/ /index.php?$query_string;
+        index index.php index.html index.htm;
+    }
+
+    # redirect server error pages to the static page /50x.html
+    error_page   403  /nginx/403.html;
+    error_page   404  /nginx/404.html;
+    error_page   500  /nginx/500.html;
+    error_page   502  /nginx/502.html;
+    error_page   503  /nginx/maintenance.html;
+    error_page   504  /nginx/504.html;
+
+    location ~ ^/nginx {
+        rewrite ^/nginx(.*)$ $1 break;
+        root   /usr/share/nginx/html;
+        internal;
+    }
+
+    # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+    #
+    #location ~ \.php$ {
+    #    proxy_pass   http://127.0.0.1;
+    #}
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    location ~ [^/]\.php(/|$) {
+        fastcgi_pass   ${NGINX_LARAVEL_HOST}:${NGINX_LARAVEL_PORT};
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param  ENVIRONMENT "${ENVIRONMENT}";
+        fastcgi_param  HTTP_CACHE "${HTTP_CACHE}";
+        fastcgi_param  TRUSTED_PROXIES "${TRUSTED_PROXIES}";
+        fastcgi_param  TRUSTED_HOSTS "${TRUSTED_HOSTS}";
+
+        include        fastcgi_params;
+    }
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    #
+    location ~ /\.ht {
+        deny  all;
+    }
+}

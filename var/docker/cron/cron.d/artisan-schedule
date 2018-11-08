@@ -1,0 +1,5 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+* * * * * root php /srv/artisan schedule:run >/dev/null 2>&1
+
+# Blank line is required else cron won't run

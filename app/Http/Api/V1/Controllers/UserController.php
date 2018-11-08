@@ -39,7 +39,10 @@ class UserController extends Controller
     public function read($id)
     {
         $user = $this->service->read($id);
-        return $this->presenter->render($user, 200);
+        if ($user) {
+            return $this->presenter->render($user, 200);
+        }
+        return $this->notFountSetValue();
     }
 
     /**
@@ -50,11 +53,14 @@ class UserController extends Controller
     public function edit($id, Request $request)
     {
         $user = $this->service->edit($id, $request);
-        $headers = [
-            'Content-Type' => 'application/vnd.api+json',
-            'Accept' => 'application/vnd.api+json'
-        ];
-        return $this->presenter->render($user, 201, $headers);
+        if ($user) {
+            $headers = [
+                'Content-Type' => 'application/vnd.api+json',
+                'Accept' => 'application/vnd.api+json'
+            ];
+            return $this->presenter->render($user, 201, $headers);
+        }
+        return $this->notFountSetValue();
     }
 
     /**
@@ -63,6 +69,13 @@ class UserController extends Controller
      */
     public function add(Request $request)
     {
+        $this->validate($request, [
+            "first_name" => "required",
+            "last_name" => "required",
+            "email" => "required|unique:users,email",
+            "password" => "required",
+        ]);
+
         $user = $this->service->add($request);
         $headers = [
             'Content-Type' => 'application/vnd.api+json',
@@ -77,12 +90,14 @@ class UserController extends Controller
     public function delete($id)
     {
         $deleted = $this->service->delete($id);
-
-        return response()->json([
-            'meta' => [
-                'deleted_count' => $deleted,
-            ]
-        ], 204);
+        if ($deleted) {
+            return response()->json([
+                'meta' => [
+                    'deleted_count' => $deleted,
+                ]
+            ], 204);
+        }
+        return $this->notFountSetValue();
     }
 
     public function register(Request $request)
@@ -101,5 +116,14 @@ class UserController extends Controller
             'Accept' => 'application/vnd.api+json'
          ];
         return $this->presenter->render($user, 200, $headers);
+    }
+
+    private function notFountSetValue()
+    {
+        return response()->json([
+            'meta' => [
+                'status' => "Not Found",
+            ]
+        ], 404);
     }
 }

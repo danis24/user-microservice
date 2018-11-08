@@ -49,7 +49,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * @{inheritDoc}
      */
-    public function transform() {
+    public function transform()
+    {
         $transformed = $this->toArray();
         foreach ($this->getUuidAttributeNames() as $uuidAttributeName) {
             $value = $this->getAttribute($uuidAttributeName);
@@ -62,8 +63,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * @{inheritDoc}
      */
-    public function entityType() {
+    public function entityType()
+    {
         return "users";
     }
-
 }
