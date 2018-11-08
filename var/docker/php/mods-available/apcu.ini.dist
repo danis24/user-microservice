@@ -1,0 +1,4 @@
+extension=apcu.so
+
+apc.enable_cli = On
+apc.enabled = On
