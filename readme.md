@@ -1,3 +1,9 @@
+[![Build Status](https://travis-ci.org/danis24/user-microservice.svg?branch=master)](https://travis-ci.org/danis24/user-microservice)
+
+| Environment  | Status |
+| ------------- | ------------- |
+| Dev  | [![Build Status](https://travis-ci.org/danis24/user-microservice.svg?branch=develop)](https://travis-ci.org/danis24/user-microservice)  |
+
 # users-microservice
 
 Is an API Services that used for maintain user.
