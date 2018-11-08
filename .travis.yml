@@ -30,7 +30,7 @@ env:
   global:
     - AWS_DEFAULT_REGION=us-east-2
     - COMMIT=${TRAVIS_COMMIT::8}
-    - DOCKER_IMAGE_NAME='user-microservices'
+    - DOCKER_IMAGE_NAME='danis24/user-microservices'
 
 before_install:
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
