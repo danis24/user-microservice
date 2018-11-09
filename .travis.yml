@@ -39,7 +39,6 @@ before_install:
   # - openssl aes-256-cbc -K $encrypted_49a125ecb0c8_key -iv $encrypted_49a125ecb0c8_iv -in .kube_secrets.tar.enc -out .kube_secrets.tar -d
   # - tar xvf .kube_secrets.tar -C /home/travis
   - docker --version
-  - ./vendor/bin/phpunit
 
 before_script:
   - sleep 1
@@ -55,6 +54,7 @@ before_script:
   - composer clear-cache -vvv
   - composer install --no-interaction -vvv
   - composer dump-autoload -vvv
+  - ./vendor/bin/phpunit
 
 script:
   - echo "\$TRAVIS_BRANCH = $TRAVIS_BRANCH"
