@@ -54,6 +54,7 @@ before_script:
   - composer clear-cache -vvv
   - composer install --no-interaction -vvv
   - composer dump-autoload -vvv
+  - ./vendor/bin/phpunit
 
 script:
   - echo "\$TRAVIS_BRANCH = $TRAVIS_BRANCH"
