@@ -54,15 +54,13 @@ before_script:
   - composer clear-cache -vvv
   - composer install --no-interaction -vvv
   - composer dump-autoload -vvv
-  - ./vendor/bin/phpunit
 
 script:
   - echo "\$TRAVIS_BRANCH = $TRAVIS_BRANCH"
   - echo "\$TRAVIS_PULL_REQUEST = $TRAVIS_PULL_REQUEST"
   - docker push $DOCKER_IMAGE_NAME:$COMMIT
   - docker push $DOCKER_IMAGE_NAME:$TAG
-  - if [[ -n "$TRAVIS_TAG" ]]; then
-    docker push $DOCKER_IMAGE_NAME:$TRAVIS_TAG ; fi
+  - if [[ -n "$TRAVIS_TAG" ]]; then docker push $DOCKER_IMAGE_NAME:$TRAVIS_TAG ; fi
 
 # after_success:
 # Test kubectl
